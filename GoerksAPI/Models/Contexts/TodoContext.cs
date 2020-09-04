@@ -4,14 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace GoerksAPI.Models
+namespace GoerksAPI.Models.Contexts
 {
     public class TodoContext : DbContext
     {
         public TodoContext(DbContextOptions<TodoContext> options)
             : base(options)
         {
-            Database.Migrate();
         }
 
         public DbSet<TodoItem> TodoItems { get; set; }

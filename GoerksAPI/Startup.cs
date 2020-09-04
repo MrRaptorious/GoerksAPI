@@ -13,6 +13,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using GoerksAPI.Models;
 using Microsoft.EntityFrameworkCore.Storage;
+using GoerksAPI.Models.Contexts;
+using System.Globalization;
 
 namespace GoerksAPI
 {
@@ -31,14 +33,26 @@ namespace GoerksAPI
             //services.AddDbContext<TodoContext>(opt =>
             //    opt.UseInMemoryDatabase("TodoList"));
 
-            services.AddDbContext<TodoContext>(opt =>
-                opt.UseSqlite("Filename=MyDatabase.db"));
 
+            ConfigureDBContext(services);
 
 
             services.AddControllers();
 
 
+        }
+
+        private void ConfigureDBContext(IServiceCollection services)
+        {
+            string connectionString = "Filename=MyDatabase.db";
+            services.AddDbContext<TodoContext>(opt =>
+                 opt.UseSqlite(connectionString));
+            services.AddDbContext<UserContext>(opt =>
+                opt.UseSqlite(connectionString));
+            services.AddDbContext<ActivityContext>(opt =>
+                opt.UseSqlite(connectionString));
+            services.AddDbContext<ActivityCatalogContext>(opt =>
+                opt.UseSqlite(connectionString));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
