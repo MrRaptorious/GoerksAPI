@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace GoerksAPI.Models
 {
-    public class StrenghtActivitySet
+    public class StrenghtActivitySet : BaseObject
     {
         public int SortIndex { get; set; }
-        public List<StrenghtActivity> StrenghtActivities { get; set; }
+        public ICollection<StrenghtActivity> StrenghtActivities { get; set; }
     }
 }

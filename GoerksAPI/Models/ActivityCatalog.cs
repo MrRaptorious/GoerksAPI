@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace GoerksAPI.Models
 {
-    public class ActivityCatalog
+    public class ActivityCatalog : BaseObject
     {
         public string Name { get; set; }
-        public Type ActivityType { get; set; }
+        public string ActivityType { get; set; }
     }
 }

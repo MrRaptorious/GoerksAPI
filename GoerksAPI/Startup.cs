@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using GoerksAPI.Models;
 using Microsoft.EntityFrameworkCore.Storage;
-using GoerksAPI.Models.Contexts;
+using GoerksAPI.Data;
 using System.Globalization;
 
 namespace GoerksAPI
@@ -30,28 +30,14 @@ namespace GoerksAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddDbContext<TodoContext>(opt =>
-            //    opt.UseInMemoryDatabase("TodoList"));
-
-
             ConfigureDBContext(services);
-
-
             services.AddControllers();
-
-
         }
 
         private void ConfigureDBContext(IServiceCollection services)
         {
             string connectionString = "Filename=MyDatabase.db";
-            services.AddDbContext<TodoContext>(opt =>
-                 opt.UseSqlite(connectionString));
             services.AddDbContext<UserContext>(opt =>
-                opt.UseSqlite(connectionString));
-            services.AddDbContext<ActivityContext>(opt =>
-                opt.UseSqlite(connectionString));
-            services.AddDbContext<ActivityCatalogContext>(opt =>
                 opt.UseSqlite(connectionString));
         }
 

@@ -11,7 +11,7 @@ namespace GoerksAPI.Models
         public string Email { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string Gender { get; set; }
-        public List<Measurement> Measurements { get; set; }
-        public List<Workout> Workouts { get; set; }
+        public ICollection<Measurement> Measurements { get; set; }
+        public ICollection<Workout> Workouts { get; set; }
     }
 }

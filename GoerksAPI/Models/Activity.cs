@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace GoerksAPI.Models
 {
-    public abstract class Activity
+    public abstract class Activity : BaseObject
     {
         public ActivityCatalog ActivityType { get; set; }
         public DateTime Start { get; set; }

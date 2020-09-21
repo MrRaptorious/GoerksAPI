@@ -5,55 +5,55 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using GoerksAPI.Data;
 using GoerksAPI.Models;
-using GoerksAPI.Models.Contexts;
 
 namespace GoerksAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TodoItemsController : ControllerBase
+    public class UsersController : ControllerBase
     {
-        private readonly TodoContext _context;
+        private readonly UserContext _context;
 
-        public TodoItemsController(TodoContext context)
+        public UsersController(UserContext context)
         {
             _context = context;
         }
 
-        // GET: api/TodoItems
+        // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TodoItem>>> GetTodoItems()
+        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            return await _context.TodoItems.ToListAsync();
+            return await _context.Users.ToListAsync();
         }
 
-        // GET: api/TodoItems/5
+        // GET: api/Users/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TodoItem>> GetTodoItem(long id)
+        public async Task<ActionResult<User>> GetUser(Guid id)
         {
-            var todoItem = await _context.TodoItems.FindAsync(id);
+            var user = await _context.Users.FindAsync(id);
 
-            if (todoItem == null)
+            if (user == null)
             {
                 return NotFound();
             }
 
-            return todoItem;
+            return user;
         }
 
-        // PUT: api/TodoItems/5
+        // PUT: api/Users/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTodoItem(long id, TodoItem todoItem)
+        public async Task<IActionResult> PutUser(Guid id, User user)
         {
-            if (id != todoItem.Id)
+            if (id != user.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(todoItem).State = EntityState.Modified;
+            _context.Entry(user).State = EntityState.Modified;
 
             try
             {
@@ -61,7 +61,7 @@ namespace GoerksAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!TodoItemExists(id))
+                if (!UserExists(id))
                 {
                     return NotFound();
                 }
@@ -74,38 +74,37 @@ namespace GoerksAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/TodoItems
+        // POST: api/Users
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItem todoItem)
+        public async Task<ActionResult<User>> PostUser(User user)
         {
-            _context.TodoItems.Add(todoItem);
+            _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            //return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
-            return CreatedAtAction(nameof(GetTodoItem), new { id = todoItem.Id }, todoItem);
+            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
         }
 
-        // DELETE: api/TodoItems/5
+        // DELETE: api/Users/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<TodoItem>> DeleteTodoItem(long id)
+        public async Task<ActionResult<User>> DeleteUser(Guid id)
         {
-            var todoItem = await _context.TodoItems.FindAsync(id);
-            if (todoItem == null)
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
             {
                 return NotFound();
             }
 
-            _context.TodoItems.Remove(todoItem);
+            _context.Users.Remove(user);
             await _context.SaveChangesAsync();
 
-            return todoItem;
+            return user;
         }
 
-        private bool TodoItemExists(long id)
+        private bool UserExists(Guid id)
         {
-            return _context.TodoItems.Any(e => e.Id == id);
+            return _context.Users.Any(e => e.Id == id);
         }
     }
 }

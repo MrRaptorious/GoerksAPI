@@ -3,8 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GoerksAPI.Models;
 
-namespace GoerksAPI.Models.Contexts
+namespace GoerksAPI.Data
 {
     public class UserContext : DbContext
     {

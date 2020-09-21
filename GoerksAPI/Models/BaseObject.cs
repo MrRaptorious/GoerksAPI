@@ -8,8 +8,8 @@ namespace GoerksAPI.Models
 {
     public abstract class BaseObject
     {
-        [Required]
-        public Guid ID { get; set; }
+        [Key]
+        public Guid Id { get; set; }
         [Required]
         public DateTime CreationDate { get; set; }
         [Required]
