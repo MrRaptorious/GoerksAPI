@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoerksAPI", "GoerksAPI\GoerksAPI.csproj", "{78C4D0E9-20F2-4D9A-80F1-342A1E0B52D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoerksAPI", "GoerksAPI\GoerksAPI.csproj", "{78C4D0E9-20F2-4D9A-80F1-342A1E0B52D7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnanasCore", "..\Ananas\AnanasCore\AnanasCore.csproj", "{FA92C592-E027-4CCA-BE39-3C579C1E386E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnanasSQLite", "..\Ananas\AnanasSQLite\AnanasSQLite.csproj", "{2FF65FB4-96D3-44BF-AC33-8D5C853C3C05}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{78C4D0E9-20F2-4D9A-80F1-342A1E0B52D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78C4D0E9-20F2-4D9A-80F1-342A1E0B52D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78C4D0E9-20F2-4D9A-80F1-342A1E0B52D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA92C592-E027-4CCA-BE39-3C579C1E386E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA92C592-E027-4CCA-BE39-3C579C1E386E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA92C592-E027-4CCA-BE39-3C579C1E386E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA92C592-E027-4CCA-BE39-3C579C1E386E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FF65FB4-96D3-44BF-AC33-8D5C853C3C05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FF65FB4-96D3-44BF-AC33-8D5C853C3C05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FF65FB4-96D3-44BF-AC33-8D5C853C3C05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FF65FB4-96D3-44BF-AC33-8D5C853C3C05}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

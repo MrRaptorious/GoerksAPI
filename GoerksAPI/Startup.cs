@@ -1,20 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
-using GoerksAPI.Models;
-using Microsoft.EntityFrameworkCore.Storage;
-using GoerksAPI.Data;
-using System.Globalization;
+using AnanasCore;
+using System.Reflection;
+using AnanasSQLite;
+using GoerksAPI.Middleware;
+using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace GoerksAPI
 {
@@ -30,15 +25,10 @@ namespace GoerksAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            ConfigureDBContext(services);
-            services.AddControllers();
-        }
+            services.AddControllers();/*.AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);*/
 
-        private void ConfigureDBContext(IServiceCollection services)
-        {
-            string connectionString = "Filename=MyDatabase.db";
-            services.AddDbContext<UserContext>(opt =>
-                opt.UseSqlite(connectionString));
+            services.AddTokenAuthentication(Configuration);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,13 +42,56 @@ namespace GoerksAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+
+            ConfigureAnanas();
+        }
+
+
+        private void ConfigureAnanas()
+        {
+            IConfigurationRoot configuration = new ConfigurationBuilder()
+                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                .AddJsonFile("appsettings.json")
+                .Build();
+
+            var types = CollectTypes();
+            string connectionString = configuration.GetConnectionString("SQLiteDB");
+            AnanasApplication app = AnanasApplication.GetApplication();
+            ApplicationSubManager sqlitemanager = new ApplicationSubManager(new DependencyConfigurationSQLite(), connectionString);
+
+            app.registerApplicationSubManager("localManager", sqlitemanager, true);
+
+            foreach (var type in types)
+            {
+                sqlitemanager.RegisterType(type);
+            }
+
+            app.start();
+        }
+
+        /// <summary>
+        /// Collects all DB types from the executing assembly
+        /// </summary>
+        /// <returns></returns>
+        private IList<Type> CollectTypes()
+        {
+            List<Type> typeList = new List<Type>();
+
+            Assembly mscorlib = GetType().Assembly;
+            foreach (Type type in mscorlib.GetTypes())
+            {
+                if (typeof(PersistentObject).IsAssignableFrom(type))
+                    typeList.Add(type);
+            }
+
+            return typeList;
         }
     }
 }
