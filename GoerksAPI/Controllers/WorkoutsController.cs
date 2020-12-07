@@ -1,6 +1,7 @@
 ﻿using GoerksAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,13 +29,14 @@ namespace GoerksAPI.Controllers
             DateTime datefrom = DateTimeFromUnixTimeStamp(dfrom);
             DateTime dateTo = DateTimeFromUnixTimeStamp(dto);
 
-            return user.Workouts?.Where(x => x.CreationDate > datefrom && x.CreationDate < dateTo).Select(x =>
+            return user.Workouts?.Where(x => x.Date > datefrom && x.Date < dateTo).Select(x =>
             {
-             return new SlimmedDownWorkout()
+                return new SlimmedDownWorkout()
                 {
                     Name = x.Name,
                     Date = x.Date,
-                    ID = x.ID
+                    ID = x.ID,
+                    Activities = x.AllActivities
                 };
             }).ToList();
         }
@@ -109,5 +111,21 @@ namespace GoerksAPI.Controllers
         public Guid ID { get; set; }
         public string Name { get; set; }
         public DateTime Date { get; set; }
+        [JsonIgnore]
+        public List<Activity> Activities { get; set; }
+        public bool Done { get => !Activities.Any(x => !x.Done); }
+        public int Count { get => Activities.Count(); }
+        public int Sets
+        {
+            get
+            {
+                int sum = 0;
+                foreach (StrengthActivity item in Activities)
+                    sum += item.Reps;
+
+                return sum;
+            }
+        }
+
     }
 }

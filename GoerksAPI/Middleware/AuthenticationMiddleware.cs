@@ -28,9 +28,7 @@ namespace GoerksAPI.Middleware
                 {
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ValidIssuer = "localhost",
-                    ValidAudience = "localhost"
+                    ValidateAudience = false
                 };
             });
 

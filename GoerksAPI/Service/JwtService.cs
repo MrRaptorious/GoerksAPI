@@ -33,8 +33,6 @@ namespace GoerksAPI.Service
                     new Claim(JwtRegisteredClaimNames.Email, user.Email),
                     new Claim(JwtRegisteredClaimNames.UniqueName, user.ID.ToString())
                 }),
-                Issuer = "self",
-                Audience = "self",
                 Expires = DateTime.UtcNow.AddMinutes(double.Parse(_expDate)),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };

@@ -2,11 +2,13 @@
 using AnanasCore.Criteria;
 using GoerksAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace GoerksAPI.Controllers
@@ -22,13 +24,11 @@ namespace GoerksAPI.Controllers
 
         protected TokenData GetTokenData()
         {
-            var tok = Request.Headers[HeaderNames.Authorization];
-
-            // Debug token
-            var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IkNvb2xlckBsb2xvLmRlIiwidW5pcXVlX25hbWUiOiJhZmI3NDlmYS0wYWY1LTQxOWUtYmZkYS04MWFiNThhM2IyYjIiLCJuYmYiOjE2MDcwMDI1NzQsImV4cCI6MTYwNzA4ODk3NCwiaWF0IjoxNjA3MDAyNTc0LCJpc3MiOiJzZWxmIiwiYXVkIjoic2VsZiJ9._sONgQHl02oeoi27Cpz3p3gI5Xn_90i-26lPIiBzxh4";
+            var tok = Request.Headers["Authorization"].ToString().Replace("Bearer ", string.Empty);
 
             var handler = new JwtSecurityTokenHandler();
-            var tokenS = handler.ReadToken(token) as JwtSecurityToken;
+            //var tokenS = handler.ReadToken(headerValue.Parameter) as JwtSecurityToken;
+            var tokenS = new System.IdentityModel.Tokens.Jwt.JwtSecurityToken(tok);
 
             var email = tokenS.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.Email).Value;
             var id = tokenS.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.UniqueName).Value;

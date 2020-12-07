@@ -13,9 +13,6 @@ namespace GoerksAPI.Models
     {
         public Measurement(ObjectSpace os) : base(os) { }
 
-        private Measurement() : base(null)
-        { }
-
         private DateTime date;
         public DateTime Date
         {

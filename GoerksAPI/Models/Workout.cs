@@ -1,5 +1,6 @@
 ﻿using AnanasCore;
 using AnanasCore.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace GoerksAPI.Models
     [Persistent]
     public class Workout : PersistentObject
     {
+        //private Workout() : base(null){}
         public Workout(ObjectSpace os) : base(os) { }
 
         private AnanasList<StrengthActivitySet> strenghtActivitySets;
@@ -19,6 +21,21 @@ namespace GoerksAPI.Models
         private AnanasList<CardioActivity> cardioActivities;
         [Association("Workout-CardioActivity")]
         public AnanasList<CardioActivity> CardioActivities { get => GetList<CardioActivity>(nameof(CardioActivities), ref cardioActivities); }
+
+        /// <summary>
+        /// Do not call its not very performant
+        /// </summary>
+        [JsonIgnore]
+        [NonPersistent]
+        public List<Activity> AllActivities
+        {
+            get => CardioActivities.ToList<Activity>()
+            .Union(StrenghtActivitySets
+                .Select(x => x.StrenghtActivities.ToList())
+                .SelectMany(x => x)
+                .ToList<Activity>())
+            .ToList();
+        }
 
         private User owner;
         [Association("User-Workouts")]
