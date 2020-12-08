@@ -14,10 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\Ananas\AnanasCore\AnanasCore.csproj" />
     <ProjectReference Include="..\..\Ananas\AnanasSQLite\AnanasSQLite.csproj" />
   </ItemGroup>
