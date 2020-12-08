@@ -19,7 +19,7 @@ namespace GoerksAPI.Controllers
 
         public GoerksBaseController()
         {
-            os = AnanasApplication.GetApplication().GetDefaultSubManager().CreateObjectSpace(true);
+            os = AnanasApplication.GetApplication().DefaultSubManager.CreateObjectSpace(true);
         }
 
         protected TokenData GetTokenData()

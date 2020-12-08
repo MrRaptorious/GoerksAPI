@@ -29,7 +29,7 @@ namespace GoerksAPI.Controllers
         public TokenController(IConfiguration config)
         {
             _config = config;
-            os = AnanasApplication.GetApplication().GetDefaultSubManager().CreateObjectSpace();
+            os = AnanasApplication.GetApplication().DefaultSubManager.CreateObjectSpace();
         }
 
         [AllowAnonymous]
@@ -66,17 +66,18 @@ namespace GoerksAPI.Controllers
                 return BadRequest("Email and password can not be null");
 
             var users = os.GetObjects<User>(new WhereClause(nameof(Models.User.Email), request.Email, ComparisonOperator.Equal));
+            User user;
 
             if (users.Count == 0)
             {
                 try
                 {
-                    var user = os.CreateObject<User>();
+                    user = os.CreateObject<User>();
 
                     user.Email = request.Email;
                     user.UserName = request.Username;
                     user.Gender = request.Gender;
-                    user.Password = request.Password;
+                    user.UpdatePassword(null,request.Password);
                     user.DateOfBirth = UnixTimeStampToDateTime(request.DateOfBirth);
 
                     os.CommitChanges();
@@ -90,7 +91,10 @@ namespace GoerksAPI.Controllers
                 return BadRequest("Email is already registerd");
 
 
-            return new OkResult();
+            var jwt = new JwtService(_config);
+            var token = jwt.GenerateSecurityToken(user);
+
+            return new JsonResult(new { token });
         }
 
         public static DateTime UnixTimeStampToDateTime(double unixTimeStamp)

@@ -62,14 +62,14 @@ namespace GoerksAPI
             AnanasApplication app = AnanasApplication.GetApplication();
             ApplicationSubManager sqlitemanager = new ApplicationSubManager(new DependencyConfigurationSQLite(), connectionString);
 
-            app.registerApplicationSubManager("localManager", sqlitemanager, true);
+            app.RegisterApplicationSubManager("localManager", sqlitemanager, true);
 
             foreach (var type in types)
             {
                 sqlitemanager.RegisterType(type);
             }
 
-            app.start();
+            app.Start();
         }
 
         /// <summary>

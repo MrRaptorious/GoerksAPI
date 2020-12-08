@@ -3,6 +3,7 @@ using AnanasCore.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace GoerksAPI.Models
@@ -46,7 +47,19 @@ namespace GoerksAPI.Models
         public string Password
         {
             get => password;
-            set => SetPropertyValue(nameof(Password), value, ref password);
+            //set => SetPropertyValue(nameof(Password), value, ref password);
+            private set => password = value;
+        }
+
+        internal bool UpdatePassword(string oldPassword, string newPassword)
+        {
+            if (CheckPassword(oldPassword))
+            {
+                SetPropertyValue(nameof(Password), EncryptPassword(newPassword), ref password);
+                return true;
+            }
+
+            return false;
         }
 
         private AnanasList<Measurement> measurements;
@@ -55,12 +68,45 @@ namespace GoerksAPI.Models
 
         private AnanasList<Workout> workouts;
         [Association("User-Workouts")]
-        public AnanasList<Workout> Workouts { get => GetList(nameof(Workouts),ref workouts); }
+        public AnanasList<Workout> Workouts { get => GetList(nameof(Workouts), ref workouts); }
 
         internal bool CheckPassword(string password)
         {
-            // TODO for debug
-            return password == password;
+            string savedPasswordHash = Password;
+
+            // always allow to set password if none not set
+            if (string.IsNullOrEmpty(savedPasswordHash))
+                return true;
+
+            byte[] hashBytes = Convert.FromBase64String(savedPasswordHash);
+
+            byte[] salt = new byte[16];
+            Array.Copy(hashBytes, 0, salt, 0, 16);
+
+            var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 100000);
+            byte[] hash = pbkdf2.GetBytes(20);
+
+
+            for (int i = 0; i < 20; i++)
+                if (hashBytes[i + 16] != hash[i])
+                    return false;
+
+            return true;
+        }
+
+        private string EncryptPassword(string password)
+        {
+            byte[] salt;
+            new RNGCryptoServiceProvider().GetBytes(salt = new byte[16]);
+            var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 100000);
+
+            byte[] hash = pbkdf2.GetBytes(20);
+            byte[] hashBytes = new byte[36];
+
+            Array.Copy(salt, 0, hashBytes, 0, 16);
+            Array.Copy(hash, 0, hashBytes, 16, 20);
+
+            return Convert.ToBase64String(hashBytes);
         }
     }
 }
