@@ -16,7 +16,7 @@ namespace GoerksAPI.Controllers
     {
         [HttpGet]
         [Authorize]
-        public ActionResult<IEnumerable<Measurement>> GetMeasurements([FromQuery(Name = "from")] string from, [FromQuery(Name = "to")] string to)
+        public ActionResult<IEnumerable<MeasurementData>> GetMeasurements([FromQuery(Name = "from")] string from, [FromQuery(Name = "to")] string to)
         {
             var user = GetUserFromToken();
 
@@ -30,7 +30,14 @@ namespace GoerksAPI.Controllers
             DateTime datefrom = DateTimeFromUnixTimeStamp(dfrom);
             DateTime dateTo = DateTimeFromUnixTimeStamp(dto);
 
-            return user.Measurements?.Where(x => x.Date > datefrom && x.Date < dateTo).ToList();
+            return user.Measurements?.Where(x => x.Date > datefrom && x.Date < dateTo).Select(x => new MeasurementData()
+            {
+                Weight = x.Weight,
+                Height = x.Height,
+                ID = x.ID,
+                Date = x.Date
+
+            }).ToList();
         }
 
         [HttpPost]
@@ -79,7 +86,7 @@ namespace GoerksAPI.Controllers
 
         [HttpPut]
         [Authorize]
-        public async Task<ActionResult<Measurement>> UpdateMeasurements([FromBody] MeasurementRequest measurementRequest)
+        public async Task<ActionResult<Measurement>> UpdateMeasurements([FromBody] MeasurementData measurementRequest)
         {
             var user = GetUserFromToken();
 
@@ -102,7 +109,8 @@ namespace GoerksAPI.Controllers
 
 
     }
-    public class MeasurementRequest
+
+    public class MeasurementData
     {
         public Guid ID { get; set; }
         public DateTime Date { get; set; }
